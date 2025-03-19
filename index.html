@@ -1,0 +1,1044 @@
+
+
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Clean Energy Advisor</title>
+    <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;600;700&display=swap">
+    <style>
+        :root {
+            --primary-color: #4ade80;
+            --primary-hover: #22c55e;
+            --secondary-color: #3b82f6;
+            --secondary-hover: #2563eb;
+            --accent-color: #fbbc05;
+            --bg-light: #f9fafb;
+            --bg-dark: #111827;
+            --text-light: #1f2937;
+            --text-dark: #f3f4f6;
+            --container-bg-light: rgba(255, 255, 255, 0.85);
+            --container-bg-dark: rgba(31, 41, 55, 0.9);
+            --success: #10b981;
+            --warning: #f59e0b;
+            --danger: #ef4444;
+        }
+
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+            transition: all 0.3s ease;
+        }
+
+        body {
+            font-family: 'Inter', sans-serif;
+            color: var(--text-light);
+            min-height: 100vh;
+            padding: 20px;
+            background-color: var(--bg-light);
+            position: relative;
+            overflow-x: hidden;
+        }
+
+        body::before {
+            content: '';
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background-image: url('https://source.unsplash.com/random/1920x1080/?solar-panels');
+            background-size: cover;
+            background-position: center;
+            background-attachment: fixed;
+            filter: brightness(0.7);
+            z-index: -1;
+            transition: all 0.5s ease;
+        }
+
+        body.dark-mode {
+            color: var(--text-dark);
+            background-color: var(--bg-dark);
+        }
+
+        body.dark-mode::before {
+            filter: brightness(0.4) contrast(1.2);
+        }
+
+        .bg-slideshow {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            z-index: -2;
+        }
+
+        .bg-image {
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background-size: cover;
+            background-position: center;
+            opacity: 0;
+            transition: opacity 2s ease-in-out;
+        }
+
+        .bg-image.active {
+            opacity: 1;
+        }
+
+        .header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding: 15px 25px;
+            background: rgba(255, 255, 255, 0.1);
+            backdrop-filter: blur(10px);
+            border-radius: 12px;
+            margin-bottom: 20px;
+            box-shadow: 0 8px 32px rgba(0, 0, 0, 0.1);
+        }
+
+        .dark-mode .header {
+            background: rgba(0, 0, 0, 0.3);
+        }
+
+        .logo {
+            display: flex;
+            align-items: center;
+            gap: 10px;
+        }
+
+        .logo-icon {
+            font-size: 28px;
+            color: var(--accent-color);
+        }
+
+        .logo-text {
+            font-size: 24px;
+            font-weight: 700;
+        }
+
+        .theme-toggle {
+            background: transparent;
+            border: none;
+            cursor: pointer;
+            font-size: 24px;
+            color: var(--text-light);
+            padding: 8px;
+            border-radius: 50%;
+        }
+
+        .dark-mode .theme-toggle {
+            color: var(--text-dark);
+        }
+
+        .main-container {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            min-height: calc(100vh - 100px);
+            padding: 20px 0;
+        }
+
+        .container {
+            background: var(--container-bg-light);
+            padding: 40px;
+            border-radius: 24px;
+            box-shadow: 0 25px 50px rgba(0, 0, 0, 0.15);
+            width: 100%;
+            max-width: 800px;
+            text-align: center;
+            backdrop-filter: blur(12px);
+            animation: fadeIn 1s ease-in-out;
+            border: 1px solid rgba(255, 255, 255, 0.2);
+        }
+
+        .dark-mode .container {
+            background: var(--container-bg-dark);
+            border: 1px solid rgba(255, 255, 255, 0.05);
+        }
+
+        @keyframes fadeIn {
+            from { opacity: 0; transform: translateY(-30px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+
+        h1 {
+            font-size: 42px;
+            margin-bottom: 15px;
+            font-weight: 700;
+            background: linear-gradient(135deg, var(--primary-color), var(--secondary-color));
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            text-shadow: 0 2px 10px rgba(0, 0, 0, 0.1);
+        }
+
+        .subtitle {
+            font-size: 18px;
+            margin-bottom: 30px;
+            color: var(--text-light);
+            opacity: 0.9;
+        }
+
+        .dark-mode .subtitle {
+            color: var(--text-dark);
+        }
+
+        .btn {
+            background: var(--primary-color);
+            color: white;
+            border: none;
+            padding: 15px 30px;
+            border-radius: 12px;
+            cursor: pointer;
+            font-size: 18px;
+            font-weight: 600;
+            transition: all 0.3s ease;
+            box-shadow: 0 10px 25px rgba(74, 222, 128, 0.3);
+            display: inline-flex;
+            align-items: center;
+            justify-content: center;
+            gap: 10px;
+            margin: 10px;
+        }
+
+        .btn:hover {
+            background: var(--primary-hover);
+            transform: translateY(-5px);
+            box-shadow: 0 15px 30px rgba(74, 222, 128, 0.4);
+        }
+
+        .btn-secondary {
+            background: var(--secondary-color);
+            box-shadow: 0 10px 25px rgba(59, 130, 246, 0.3);
+        }
+
+        .btn-secondary:hover {
+            background: var(--secondary-hover);
+            box-shadow: 0 15px 30px rgba(59, 130, 246, 0.4);
+        }
+        
+        .btn-outline {
+            background: transparent;
+            border: 2px solid var(--primary-color);
+            color: var(--primary-color);
+        }
+        
+        .btn-outline:hover {
+            background: var(--primary-color);
+            color: white;
+        }
+
+        .location-container {
+            margin: 30px 0;
+            padding: 25px;
+            background: rgba(255, 255, 255, 0.7);
+            border-radius: 16px;
+            box-shadow: 0 10px 30px rgba(0, 0, 0, 0.08);
+        }
+
+        .dark-mode .location-container {
+            background: rgba(17, 24, 39, 0.7);
+        }
+
+        .tabs {
+            display: flex;
+            justify-content: center;
+            margin-bottom: 20px;
+        }
+
+        .tab {
+            padding: 12px 20px;
+            cursor: pointer;
+            border-bottom: 3px solid transparent;
+            font-weight: 600;
+            color: #6b7280;
+        }
+
+        .tab.active {
+            border-bottom: 3px solid var(--primary-color);
+            color: var(--primary-color);
+        }
+
+        .dark-mode .tab {
+            color: #9ca3af;
+        }
+
+        .dark-mode .tab.active {
+            color: var(--primary-color);
+        }
+
+        .tab-content {
+            display: none;
+        }
+
+        .tab-content.active {
+            display: block;
+            animation: fadeIn 0.5s ease;
+        }
+
+        .location-input {
+            display: flex;
+            gap: 10px;
+            margin-top: 15px;
+            width: 100%;
+        }
+
+        .location-input input {
+            flex-grow: 1;
+            padding: 15px 20px;
+            border: 2px solid #e5e7eb;
+            border-radius: 10px;
+            font-size: 16px;
+            transition: all 0.3s ease;
+            background: white;
+        }
+
+        .location-input input:focus {
+            border-color: var(--primary-color);
+            box-shadow: 0 0 0 3px rgba(74, 222, 128, 0.3);
+            outline: none;
+        }
+
+        .dark-mode .location-input input {
+            background: #1f2937;
+            border-color: #374151;
+            color: white;
+        }
+
+        .dark-mode .location-input input:focus {
+            border-color: var(--primary-color);
+            box-shadow: 0 0 0 3px rgba(74, 222, 128, 0.2);
+        }
+
+        #map {
+            height: 300px;
+            width: 100%;
+            border-radius: 12px;
+            margin: 20px 0;
+            box-shadow: 0 5px 15px rgba(0, 0, 0, 0.1);
+        }
+
+        #result {
+            margin-top: 30px;
+            font-size: 18px;
+            text-align: left;
+            line-height: 1.7;
+            background: white;
+            padding: 25px;
+            border-radius: 16px;
+            box-shadow: 0 10px 30px rgba(0, 0, 0, 0.06);
+            transition: all 0.5s ease;
+            display: none;
+        }
+
+        #result.active {
+            display: block;
+            animation: slideUp 0.6s ease;
+        }
+
+        @keyframes slideUp {
+            from { opacity: 0; transform: translateY(30px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+
+        .dark-mode #result {
+            background: #1f2937;
+            color: var(--text-dark);
+            box-shadow: 0 10px 30px rgba(0, 0, 0, 0.2);
+        }
+
+        .result-header {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            margin-bottom: 20px;
+        }
+
+        .result-title {
+            font-size: 24px;
+            font-weight: 700;
+            color: var(--primary-color);
+        }
+
+        .result-location {
+            font-size: 16px;
+            color: #6b7280;
+        }
+
+        .dark-mode .result-location {
+            color: #9ca3af;
+        }
+
+        .recommendation {
+            display: flex;
+            gap: 20px;
+            margin: 25px 0;
+            padding: 20px;
+            background: #f3f4f6;
+            border-radius: 12px;
+            align-items: center;
+        }
+
+        .dark-mode .recommendation {
+            background: #374151;
+        }
+
+        .recommendation-icon {
+            font-size: 40px;
+            color: var(--accent-color);
+        }
+
+        .recommendation-content {
+            flex-grow: 1;
+        }
+
+        .recommendation-title {
+            font-size: 20px;
+            font-weight: 600;
+            margin-bottom: 5px;
+        }
+
+        .recommendation-desc {
+            font-size: 16px;
+            color: #6b7280;
+        }
+
+        .dark-mode .recommendation-desc {
+            color: #d1d5db;
+        }
+
+        .chart-section {
+            margin-top: 40px;
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+            gap: 25px;
+        }
+
+        .chart-container {
+            background: white;
+            padding: 20px;
+            border-radius: 16px;
+            box-shadow: 0 15px 35px rgba(0, 0, 0, 0.08);
+        }
+
+        .dark-mode .chart-container {
+            background: #1f2937;
+        }
+
+        .chart-title {
+            font-size: 18px;
+            font-weight: 600;
+            margin-bottom: 15px;
+            text-align: center;
+        }
+
+        .loader {
+            display: none;
+            width: 50px;
+            height: 50px;
+            border: 5px solid rgba(74, 222, 128, 0.2);
+            border-radius: 50%;
+            border-top-color: var(--primary-color);
+            animation: spin 1s linear infinite;
+            margin: 20px auto;
+        }
+
+        @keyframes spin {
+            to { transform: rotate(360deg); }
+        }
+
+        .loading-text {
+            text-align: center;
+            margin-top: 10px;
+            font-size: 16px;
+            color: #6b7280;
+            display: none;
+        }
+
+        .dark-mode .loading-text {
+            color: #9ca3af;
+        }
+
+        .footer {
+            text-align: center;
+            margin-top: 40px;
+            padding: 20px;
+            color: rgba(255, 255, 255, 0.8);
+            font-size: 14px;
+        }
+
+        /* New styles for recommendation tabs */
+        .recommendation-tabs {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 10px;
+            margin: 15px 0;
+            justify-content: center;
+        }
+
+        .recommendation-tab {
+            padding: 8px 18px;
+            border-radius: 8px;
+            cursor: pointer;
+            font-weight: 500;
+            transition: all 0.3s ease;
+            background: #e5e7eb;
+            color: #4b5563;
+        }
+
+        .recommendation-tab.active {
+            background: var(--primary-color);
+            color: white;
+        }
+
+        .dark-mode .recommendation-tab {
+            background: #374151;
+            color: #d1d5db;
+        }
+
+        .dark-mode .recommendation-tab.active {
+            background: var(--primary-color);
+            color: white;
+        }
+
+        .recommendation-content-section {
+            display: none;
+        }
+
+        .recommendation-content-section.active {
+            display: block;
+            animation: fadeIn 0.5s ease;
+        }
+
+        .suitability-score {
+            display: inline-block;
+            padding: 5px 12px;
+            border-radius: 100px;
+            font-weight: 600;
+            font-size: 14px;
+            margin-top: 10px;
+        }
+
+        .suitability-high {
+            background: rgba(16, 185, 129, 0.2);
+            color: #10b981;
+        }
+
+        .suitability-medium {
+            background: rgba(245, 158, 11, 0.2);
+            color: #f59e0b;
+        }
+
+        .suitability-low {
+            background: rgba(239, 68, 68, 0.2);
+            color: #ef4444;
+        }
+
+        .dark-mode .suitability-high {
+            background: rgba(16, 185, 129, 0.3);
+        }
+
+        .dark-mode .suitability-medium {
+            background: rgba(245, 158, 11, 0.3);
+        }
+
+        .dark-mode .suitability-low {
+            background: rgba(239, 68, 68, 0.3);
+        }
+
+        @media (max-width: 768px) {
+            .container {
+                padding: 30px 20px;
+            }
+            
+            h1 {
+                font-size: 32px;
+            }
+            
+            .location-input {
+                flex-direction: column;
+            }
+            
+            .chart-section {
+                grid-template-columns: 1fr;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="bg-slideshow">
+        <div class="bg-image active" style="background-image: url('https://source.unsplash.com/random/1920x1080/?solar-panels');"></div>
+        <div class="bg-image" style="background-image: url('https://source.unsplash.com/random/1920x1080/?wind-turbines');"></div>
+        <div class="bg-image" style="background-image: url('https://source.unsplash.com/random/1920x1080/?hydroelectric');"></div>
+        <div class="bg-image" style="background-image: url('https://source.unsplash.com/random/1920x1080/?geothermal');"></div>
+    </div>
+    
+    <header class="header">
+        <div class="logo">
+            <span class="logo-icon">⚡</span>
+            <span class="logo-text">Clean Energy Advisor</span>
+        </div>
+        <button class="theme-toggle" onclick="toggleDarkMode()">🌓</button>
+    </header>
+    
+    <div class="main-container">
+        <div class="container">
+            <h1>Clean Energy Advisor</h1>
+            <p class="subtitle">Discover the best renewable energy options for your location</p>
+            
+            <div class="location-container">
+                <div class="tabs">
+                    <div class="tab active" data-tab="manual">Manual Input</div>
+                    <div class="tab" data-tab="automatic">Automatic Location</div>
+                    <div class="tab" data-tab="recommendations">Recommendations</div>
+                </div>
+                
+                <div class="tab-content active" id="manual-tab">
+                    <div class="location-input">
+                        <input type="text" id="manualLocation" placeholder="Enter your location (e.g., street,City, Country)" />
+                        <button class="btn" onclick="fetchEnergyData('manual')">
+                            <span>Analyze</span>
+                            <span>→</span>
+                        </button>
+                    </div>
+                </div>
+                
+                <div class="tab-content" id="automatic-tab">
+                    <p>Allow us to detect your current location automatically</p>
+                    <button class="btn btn-secondary" onclick="getUserLocation()">
+                        <span>📍</span>
+                        <span>Use My Location</span>
+                    </button>
+                </div>
+                
+                <div class="tab-content" id="recommendations-tab">
+                    <p>Explore different renewable energy options and find what works best for your needs</p>
+                    
+                    <div class="recommendation-tabs">
+                        <div class="recommendation-tab active" data-rec-tab="solar">Solar Energy</div>
+                        <div class="recommendation-tab" data-rec-tab="wind">Wind Energy</div>
+                        <div class="recommendation-tab" data-rec-tab="hydro">Hydro Energy</div>
+                        <div class="recommendation-tab" data-rec-tab="geothermal">Geothermal Energy</div>
+                    </div>
+                    
+                    <div class="recommendation-content-section active" id="solar-content">
+                        <div class="recommendation">
+                            <div class="recommendation-icon">☀️</div>
+                            <div class="recommendation-content">
+                                <h4 class="recommendation-title">Solar Energy</h4>
+                                <p class="recommendation-desc">Solar panels convert sunlight directly into electricity through photovoltaic cells. They're ideal for homes with good sun exposure and unshaded roofs.</p>
+                                <div class="suitability-score suitability-high">High Potential in Sunny Regions</div>
+                            </div>
+                        </div>
+                        
+                        <h4>Benefits of Solar Energy:</h4>
+                        <ul>
+                            <li>Zero emissions during operation</li>
+                            <li>Low maintenance requirements</li>
+                            <li>25+ year lifespan for quality panels</li>
+                            <li>Energy independence and reduced utility bills</li>
+                            <li>Available incentives and tax credits in many regions</li>
+                        </ul>
+                        
+                        <h4>Considerations:</h4>
+                        <ul>
+                            <li>Initial installation costs (₹70,000 - ₹120,000 per kW)</li>
+                            <li>Weather dependency and seasonal variations</li>
+                            <li>Requires adequate roof space or land area</li>
+                            <li>May need battery storage for 24/7 power</li>
+                        </ul>
+                    </div>
+                    
+                    <div class="recommendation-content-section" id="wind-content">
+                        <div class="recommendation">
+                            <div class="recommendation-icon">🌬️</div>
+                            <div class="recommendation-content">
+                                <h4 class="recommendation-title">Wind Energy</h4>
+                                <p class="recommendation-desc">Wind turbines convert kinetic energy from wind into electricity. Small-scale turbines can work well in rural areas with consistent wind patterns.</p>
+                                <div class="suitability-score suitability-medium">Medium Potential for Most Locations</div>
+                            </div>
+                        </div>
+                        
+                        <h4>Benefits of Wind Energy:</h4>
+                        <ul>
+                           
+                            <li>Highly efficient in windy locations</li>
+                            <li>Can produce power day and night</li>
+                            <li>Small footprint with large power generation</li>
+                            <li>Low operating costs after installation</li>
+                            <li>20+ year lifespan for quality turbines</li>
+                        </ul>
+                        
+                        <h4>Considerations:</h4>
+                        <ul>
+                            <li>Initial installation costs Rs. 4.5 to 6.5 crores per MW</li>
+                            <li>Requires consistent wind speeds (ideally 12+ mph)</li>
+                            <li>Higher initial costs for small-scale systems</li>
+                            <li>Potential noise concerns and visual impact</li>
+                            <li>Local zoning restrictions may apply</li>
+                            <li>Regular maintenance required</li>
+                        </ul>
+                    </div>
+                    
+                    <div class="recommendation-content-section" id="hydro-content">
+                        <div class="recommendation">
+                            <div class="recommendation-icon">💧</div>
+                            <div class="recommendation-content">
+                                <h4 class="recommendation-title">Hydro Energy</h4>
+                                <p class="recommendation-desc">Micro-hydropower systems use flowing water to generate electricity. Ideal for properties with consistent water flow from streams or rivers.</p>
+                                <div class="suitability-score suitability-medium">Location-Specific Potential</div>
+                            </div>
+                        </div>
+                        
+                        <h4>Benefits of Hydro Energy:</h4>
+                        <ul>
+                            
+                            <li>Consistent and reliable power generation</li>
+                            <li>24/7 electricity production potential</li>
+                            <li>Long system lifespan (50+ years)</li>
+                            <li>Low maintenance once installed</li>
+                            <li>Minimal environmental impact for micro systems</li>
+                        </ul>
+                        
+                        <h4>Considerations:</h4>
+                        <ul>
+                            <li>Initial installation costs Rs 70 million to Rs 200 million per MW</li>
+                            <li>Requires access to flowing water year-round</li>
+                            <li>Environmental permits often needed</li>
+                            <li>Higher initial installation complexity</li>
+                            <li>Seasonal water flow variations</li>
+                            <li>Limited to specific geographical locations</li>
+                        </ul>
+                    </div>
+                    
+                    <div class="recommendation-content-section" id="geothermal-content">
+                        <div class="recommendation">
+                            <div class="recommendation-icon">🔥</div>
+                            <div class="recommendation-content">
+                                <h4 class="recommendation-title">Geothermal Energy</h4>
+                                <p class="recommendation-desc">Geothermal heat pumps use the earth's constant temperature to heat and cool homes efficiently. Works in almost any location with sufficient land for installation.</p>
+                                <div class="suitability-score suitability-high">Widely Applicable</div>
+                            </div>
+                        </div>
+                        
+                        <h4>Benefits of Geothermal Energy:</h4>
+                        <ul>
+                           
+                            <li>Highly efficient heating and cooling</li>
+                            <li>Significant energy savings (30-70%)</li>
+                            <li>Works in virtually any climate</li>
+                            <li>Very long system lifespan (25-50 years)</li>
+                            <li>Quiet operation and invisible infrastructure</li>
+                        </ul>
+                        
+                        <h4>Considerations:</h4>
+                        <ul>
+                            <li>Initial installation costs 10 MW To 1000 MW at ₹ 99900000/piece </li>
+                            <li>Higher upfront installation costs</li>
+                            <li>Requires adequate land for ground loops</li>
+                            <li>Installation disrupts landscaping temporarily</li>
+                            <li>Professional installation required</li>
+                            <li>Best implemented during new construction</li>
+                        </ul>
+                    </div>
+                </div>
+            </div>
+            
+            <div class="loader" id="loader"></div>
+            <p class="loading-text" id="loadingText">Analyzing energy options for your location...</p>
+            
+            <div id="result">
+                <div class="result-header">
+                    <h3 class="result-title">Energy Analysis Results</h3>
+                    <p class="result-location" id="resultLocation">Location: YOUR DESIRED LOCATION</p>
+                </div>
+                
+                <div class="recommendation">
+                    <div class="recommendation-icon">☀️</div>
+                    <div class="recommendation-content">
+                        <h4 class="recommendation-title">Solar Energy</h4>
+                        <p class="recommendation-desc">Based on your location's climate and solar exposure, solar panels would be an excellent primary energy source.</p>
+                    </div>
+                </div>
+                
+                <div class="recommendation">
+                    <div class="recommendation-icon">🌬️</div>
+                    <div class="recommendation-content">
+                        <h4 class="recommendation-title">Wind Energy</h4>
+                        <p class="recommendation-desc">As a secondary option, small-scale wind turbines could supplement your energy needs during cloudy periods.</p>
+                    </div>
+                </div>
+
+                <div class="chart-section">
+                    <div class="chart-container">
+                        <h4 class="chart-title">Estimated Cost Savings</h4>
+                        <canvas id="savingsChart"></canvas>
+                        <script>
+                            
+                        // Background slideshow functionality
+                        document.addEventListener('DOMContentLoaded', function() {
+                            // Variables
+                            const bgImages = document.querySelectorAll('.bg-image');
+                            let currentImageIndex = 0;
+                            
+                            // Tab functionality
+                            const tabs = document.querySelectorAll('.tab');
+                            const tabContents = document.querySelectorAll('.tab-content');
+                            
+                            // Recommendation tabs
+                            const recTabs = document.querySelectorAll('.recommendation-tab');
+                            const recContents = document.querySelectorAll('.recommendation-content-section');
+                            
+                            // Dark mode toggle
+                            window.toggleDarkMode = function() {
+                                document.body.classList.toggle('dark-mode');
+                                localStorage.setItem('darkMode', document.body.classList.contains('dark-mode'));
+                            };
+                            
+                            // Check for saved dark mode preference
+                            if (localStorage.getItem('darkMode') === 'true') {
+                                document.body.classList.add('dark-mode');
+                            }
+                            
+                            // Background image rotation
+                            function rotateBackgroundImage() {
+                                bgImages[currentImageIndex].classList.remove('active');
+                                currentImageIndex = (currentImageIndex + 1) % bgImages.length;
+                                bgImages[currentImageIndex].classList.add('active');
+                            }
+                            
+                            // Start background rotation
+                            setInterval(rotateBackgroundImage, 10000);
+                            
+                            // Tab switching functionality
+                            tabs.forEach(tab => {
+                                tab.addEventListener('click', () => {
+                                    const tabId = tab.getAttribute('data-tab');
+                                    
+                                    // Update active tab
+                                    tabs.forEach(t => t.classList.remove('active'));
+                                    tab.classList.add('active');
+                                    
+                                    // Show corresponding content
+                                    tabContents.forEach(content => {
+                                        content.classList.remove('active');
+                                        if (content.id === `${tabId}-tab`) {
+                                            content.classList.add('active');
+                                        }
+                                    });
+                                });
+                            });
+                            
+                            // Recommendation tab switching
+                            recTabs.forEach(tab => {
+                                tab.addEventListener('click', () => {
+                                    const recTabId = tab.getAttribute('data-rec-tab');
+                                    
+                                    // Update active recommendation tab
+                                    recTabs.forEach(t => t.classList.remove('active'));
+                                    tab.classList.add('active');
+                                    
+                                    // Show corresponding recommendation content
+                                    recContents.forEach(content => {
+                                        content.classList.remove('active');
+                                        if (content.id === `${recTabId}-content`) {
+                                            content.classList.add('active');
+                                        }
+                                    });
+                                });
+                            });
+                            
+                            // Get user location
+                            window.getUserLocation = function() {
+                                document.getElementById('loader').style.display = 'block';
+                                document.getElementById('loadingText').style.display = 'block';
+                                
+                                if (navigator.geolocation) {
+                                    navigator.geolocation.getCurrentPosition(
+                                        position => {
+                                            const lat = position.coords.latitude;
+                                            const lng = position.coords.longitude;
+                                            reverseGeocode(lat, lng);
+                                        },
+                                        error => {
+                                            document.getElementById('loader').style.display = 'none';
+                                            document.getElementById('loadingText').style.display = 'none';
+                                            alert('Unable to retrieve your location. Please use manual input.');
+                                        }
+                                    );
+                                } else {
+                                    document.getElementById('loader').style.display = 'none';
+                                    document.getElementById('loadingText').style.display = 'none';
+                                    alert('Geolocation is not supported by your browser. Please use manual input.');
+                                }
+                            };
+                           
+                               
+
+// Reverse geocode coordinates to address
+function reverseGeocode(lat, lng) {
+    // In a real app, you would use a geocoding service API
+    // For demo purposes, we'll simulate a response
+    setTimeout(() => {
+        const simulatedLocation = "Location at 21.4996, 83.8986";  // Would be from API in real app
+        document.getElementById('loader').style.display = 'none';
+        document.getElementById('loadingText').style.display = 'none';
+        
+        fetchEnergyData('automatic', simulatedLocation, lat, lng);
+    }, 1500);
+}
+                            
+                            // Fetch energy data based on location
+                            window.fetchEnergyData = function(mode, location, lat, lng) {
+                                document.getElementById('loader').style.display = 'block';
+                                document.getElementById('loadingText').style.display = 'block';
+                                
+                                let locationText;
+                                if (mode === 'manual') {
+                                    locationText = document.getElementById('manualLocation').value;
+                                    if (!locationText) {
+                                        alert('Please enter a location');
+                                        document.getElementById('loader').style.display = 'none';
+                                        document.getElementById('loadingText').style.display = 'none';
+                                        return;
+                                    }
+                                } else {
+                                    locationText = location;
+                                }
+                                
+                                // In a real app, you would fetch actual data from an API
+                                // For demo purposes, we'll simulate API response with a delay
+                                setTimeout(() => {
+                                    document.getElementById('loader').style.display = 'none';
+                                    document.getElementById('loadingText').style.display = 'none';
+                                    
+                                    // Update result location
+                                    document.getElementById('resultLocation').textContent = `Location: ${locationText}`;
+                                    
+                                    // Show result section
+                                    document.getElementById('result').classList.add('active');
+                                    
+                                    // Generate charts with sample data
+                                    generateCharts();
+                                    
+                                    // Scroll to results
+                                    document.getElementById('result').scrollIntoView({ behavior: 'smooth' });
+                                }, 2000);
+                            };
+                            
+                            // Generate chart visualizations
+                            function generateCharts() {
+                                // Savings chart
+                                const savingsCtx = document.getElementById('savingsChart').getContext('2d');
+                                
+                                // Sample data - in a real app, this would be calculated based on location
+                                const savingsData = {
+                                    labels: ['Year 1', 'Year 5', 'Year 10', 'Year 15', 'Year 20'],
+                                    datasets: [
+                                        {
+                                            label: 'Solar Energy',
+                                            backgroundColor: 'rgba(74, 222, 128, 0.2)',
+                                            borderColor: 'rgba(74, 222, 128, 1)',
+                                            borderWidth: 2,
+                                            data: [25000, 150000, 320000, 500000, 700000]
+                                        },
+                                        {
+                                            label: 'Wind Energy',
+                                            backgroundColor: 'rgba(59, 130, 246, 0.2)',
+                                            borderColor: 'rgba(59, 130, 246, 1)',
+                                            borderWidth: 2,
+                                            data: [15000, 100000, 240000, 380000, 520000]
+                                        },
+                                        {
+                                            label: 'Traditional Energy',
+                                            backgroundColor: 'rgba(239, 68, 68, 0.2)',
+                                            borderColor: 'rgba(239, 68, 68, 1)',
+                                            borderWidth: 2,
+                                            data: [0, 0, 0, 0, 0]
+                                        }
+                                    ]
+                                };
+                                
+                                const savingsChart = new Chart(savingsCtx, {
+                                    type: 'bar',
+                                    data: savingsData,
+                                    options: {
+                                        responsive: true,
+                                        scales: {
+                                            y: {
+                                                beginAtZero: true,
+                                                title: {
+                                                    display: true,
+                                                    text: 'Cumulative Savings (₹)'
+                                                }
+                                            },
+                                            x: {
+                                                title: {
+                                                    display: true,
+                                                    text: 'Timeline'
+                                                }
+                                            }
+                                        },
+                                        plugins: {
+                                            legend: {
+                                                position: 'top',
+                                            },
+                                            tooltip: {
+                                                callbacks: {
+                                                    label: function(context) {
+                                                        let label = context.dataset.label || '';
+                                                        if (label) {
+                                                            label += ': ';
+                                                        }
+                                                        if (context.parsed.y !== null) {
+                                                            label += new Intl.NumberFormat('en-IN', { 
+                                                                style: 'currency', 
+                                                                currency: 'INR',
+                                                                minimumFractionDigits: 0,
+                                                                maximumFractionDigits: 0
+                                                            }).format(context.parsed.y);
+                                                        }
+                                                        return label;
+                                                    }
+                                                }
+                                            }
+                                        }
+                                    }
+                                });
+                                
+                                // Add more charts as needed
+                                // For example, you could add an energy production chart, CO2 emissions avoided, etc.
+                            }
+                            
+                            // Initialize any additional elements
+                            initializeApp();
+                        });
+                        
+                        function initializeApp() {
+                            // Create a script tag to load Chart.js dynamically
+                            const chartScript = document.createElement('script');
+                            chartScript.src = 'https://cdnjs.cloudflare.com/ajax/libs/Chart.js/3.9.1/chart.min.js';
+                            chartScript.integrity = 'sha512-ElRFoEQdI5Ht6kZvyzXhYG9NqjtkmlkfYk0wr6wHxU9JEHakS7UJZNeml5ALk+8IKlU6jDgMabC3vkumRokgJA==';
+                            chartScript.crossOrigin = 'anonymous';
+                            chartScript.referrerPolicy = 'no-referrer';
+                            document.body.appendChild(chartScript);
+                            
+                            // Add more elements to the page if needed
+                            // For example, you could initialize other UI components
+                            
+                            // Ensure the page is fully loaded before showing
+                            window.addEventListener('load', function() {
+                                document.body.style.opacity = '1';
+                            });
+                        }
+                        </script>
+                    </div>
+                    </html>
